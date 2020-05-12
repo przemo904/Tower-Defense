@@ -6,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField] public GameObject wall;
-
+    [SerializeField] public LayerMask groundMask;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -18,12 +19,17 @@ public class GameManager : MonoBehaviour
     {
         // wall selected from UI
         // create wall model if possible
-        if (Input.GetMouseButton(0))
+
+        if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(name);
-        }
-        if (Input.GetMouseButtonUp(0)) {
-            Instantiate(wall, new Vector3(0, 1, 0), Quaternion.Euler(-90, 0, 0));
+            Vector3 clickPosition = Vector3.one;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit,100f,groundMask)) {
+                clickPosition = hit.point;
+
+            }
+            Instantiate(wall, clickPosition, Quaternion.Euler(-90, 0, 0));
         }
     }
 
